@@ -17,13 +17,14 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ```diff
 
-diff Para activar un entorno virtual en PowerShell, debes usar el comando específico del entorno virtual que hayas creado. Por ejemplo, si estás trabajando con Python y has creado un entorno virtual usando `venv`, puedes activarlo con el siguiente comando:
+diff | Para activar un entorno virtual en PowerShell, debes usar el comando específico del entorno
+diff | virtual que hayas creado. Por ejemplo, si estás trabajando con Python y has creado un entorno virtual 
+diff | usando `venv`, puedes activarlo con el siguiente comando:
 
 ```
 
-
-```powershell
-.\nombre_del_entorno\Scripts\Activate.ps1
+```diff powershell
++ .\nombre_del_entorno\Scripts\Activate.ps1
 ```
 Asegúrate de reemplazar `nombre_del_entorno` con el nombre de tu entorno virtual.
 
