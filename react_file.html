@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Chatbot</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-container {
+            height: calc(100vh - 160px);
+        }
+        .message-animation {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator::after {
+            content: '...';
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const ChatApp = () => {
+            const [messages, setMessages] = useState([]);
+            const [input, setInput] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const [isLoggedIn, setIsLoggedIn] = useState(false);
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const messagesEndRef = useRef(null);
+
+            // Simulate login (in a real app, this would call your Flask backend)
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                setError('');
+                try {
+                    // In a real app, you would call your Flask login endpoint
+                    // const response = await fetch('/api/login', {
+                    //     method: 'POST',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify({ username, password })
+                    // });
+                    // const data = await response.json();
+                    // if (response.ok) {
+                    //     localStorage.setItem('token', data.token);
+                    //     setIsLoggedIn(true);
+                    // } else {
+                    //     setError(data.message || 'Login failed');
+                    // }
+                    
+                    // For demo purposes, we'll just simulate a successful login
+                    setIsLoggedIn(true);
+                    // Add a welcome message
+                    setMessages([{
+                        id: Date.now(),
+                        text: `Welcome to Gemini Chat! How can I help you today?`,
+                        sender: 'bot',
+                        timestamp: new Date().toISOString()
+                    }]);
+                } catch (err) {
+                    setError('An error occurred during login');
+                    console.error('Login error:', err);
+                }
+            };
+
+            const handleLogout = () => {
+                // In a real app, you might call a logout endpoint
+                // localStorage.removeItem('token');
+                setIsLoggedIn(false);
+                setMessages([]);
+                setUsername('');
+                setPassword('');
+            };
+
+            const handleSendMessage = async (e) => {
+                e.preventDefault();
+                if (!input.trim()) return;
+
+                const userMessage = {
+                    id: Date.now(),
+                    text: input,
+                    sender: 'user',
+                    timestamp: new Date().toISOString()
+                };
+
+                setMessages(prev => [...prev, userMessage]);
+                setInput('');
+                setIsTyping(true);
+
+                try {
+                    // In a real app, this would call your Flask backend which then calls Gemini API
+                    // const token = localStorage.getItem('token');
+                    // const response = await fetch('/api/chat', {
+                    //     method: 'POST',
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //         'Authorization': `Bearer ${token}`
+                    //     },
+                    //     body: JSON.stringify({ message: input })
+                    // });
+                    // const data = await response.json();
+                    
+                    // For demo purposes, we'll simulate a response after a delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    const botMessage = {
+                        id: Date.now() + 1,
+                        text: `This is a simulated response from Gemini. In a real implementation, this would be the AI's actual response. You asked: "${input}"`,
+                        sender: 'bot',
+                        timestamp: new Date().toISOString()
+                    };
+
+                    setMessages(prev => [...prev, botMessage]);
+                } catch (err) {
+                    console.error('Error sending message:', err);
+                    setMessages(prev => [...prev, {
+                        id: Date.now() + 1,
+                        text: 'Sorry, there was an error processing your message.',
+                        sender: 'bot',
+                        timestamp: new Date().toISOString()
+                    }]);
+                } finally {
+                    setIsTyping(false);
+                }
+            };
+
+            useEffect(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, [messages]);
+
+            if (!isLoggedIn) {
+                return (
+                    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+                        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                            <h1 className="text-2xl font-bold text-center mb-6 text-indigo-600">Gemini Chat Login</h1>
+                            {error && <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>}
+                            <form onSubmit={handleLogin}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2" htmlFor="username">Username</label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-gray-700 mb-2" htmlFor="password">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200"
+                                >
+                                    Login
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-4xl mx-auto h-screen flex flex-col bg-white shadow-lg">
+                    <header className="bg-indigo-600 text-white p-4 flex justify-between items-center">
+                        <h1 className="text-xl font-bold">Gemini Chat</h1>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 bg-white text-indigo-600 px-3 py-1 rounded-lg hover:bg-indigo-100 transition duration-200"
+                        >
+                            <i className="fas fa-sign-out-alt"></i>
+                            Logout
+                        </button>
+                    </header>
+
+                    <div className="chat-container overflow-y-auto p-4 space-y-4">
+                        {messages.map((message) => (
+                            <div
+                                key={message.id}
+                                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div
+                                    className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg p-3 message-animation ${
+                                        message.sender === 'user'
+                                            ? 'bg-indigo-100 text-indigo-900'
+                                            : 'bg-gray-200 text-gray-900'
+                                    }`}
+                                >
+                                    <div className="flex items-center mb-1">
+                                        {message.sender === 'bot' ? (
+                                            <i className="fas fa-robot mr-2 text-indigo-600"></i>
+                                        ) : (
+                                            <i className="fas fa-user mr-2 text-indigo-600"></i>
+                                        )}
+                                        <span className="font-semibold">
+                                            {message.sender === 'bot' ? 'Gemini' : 'You'}
+                                        </span>
+                                    </div>
+                                    <p className="whitespace-pre-wrap">{message.text}</p>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        {new Date(message.timestamp).toLocaleTimeString()}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        {isTyping && (
+                            <div className="flex justify-start">
+                                <div className="bg-gray-200 text-gray-900 rounded-lg p-3 max-w-xs">
+                                    <div className="flex items-center">
+                                        <i className="fas fa-robot mr-2 text-indigo-600"></i>
+                                        <span className="font-semibold">Gemini</span>
+                                    </div>
+                                    <div className="typing-indicator">Typing</div>
+                                </div>
+                            </div>
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    <form onSubmit={handleSendMessage} className="p-4 border-t flex items-center gap-2">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            className="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Type your message..."
+                        />
+                        <button
+                            type="submit"
+                            className="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition duration-200"
+                            disabled={isTyping}
+                        >
+                            <i className="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ChatApp />);
+    </script>
+</body>
+</html>

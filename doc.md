@@ -6,8 +6,6 @@ mkdir gemini-chat-backend
 cd gemini-chat-backend
 python -m venv venv
 ```
-
-
  > [!CAUTION]
  > Para activar el entorno virtual en bash
 
@@ -36,11 +34,6 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 Esto permitirá ejecutar scripts firmados localmente.
 
-## 2. Instalar los paquetes requeridos
-
-```powershell
-pip install flask flask-cors flask-jwt-extended python-dotenv google-generativeai sqlalchemy
-```
 ## 2. Crear la estructura de la aplicación Flask
 
 ```plaintext
@@ -56,15 +49,42 @@ gemini-chat-backend/
 └── run.py
 ```
 
-## 3. Paso 1: Crear el archivo requirements.txt
+## 3.1 Instalar los paquetes requeridos
 
-```diff
-
-diff | En el directorio gemini-chat-backend, cree un archivo llamado `requirements.txt`.
-diff | Agregue las siguientes líneas al archivo ´requirements.txt´ para especificar los paquetes necesarios:
-diff | 
-
+```powershell
+pip install flask flask-cors flask-jwt-extended python-dotenv google-generativeai sqlalchemy
 ```
 
+## 3.2 Paso 1: Crear el archivo requirements.txt
 
+```diff
+diff | En el directorio gemini-chat-backend, cree un archivo llamado `requirements.txt`.
+diff | Agregue las siguientes líneas al archivo ´requirements.txt´ para especificar los paquetes necesarios:
+```
+ > [!CAUTION]
+ > Asegúrese de que su entorno virtual esté activado
 
+```diff
+diff | Una vez activado su entorno virtual, ejecute el siguiente comando para instalar 
+diff | todos los paquetes enumerados en requirements.txt:.
+```
+
+```powershell
+pip install -r requirements.txt
+```
+
+## 3.3 Verificar la instalación
+
+Después de ejecutar el comando anterior, puede verificar que los paquetes se hayan instalado correctamente ejecutando:
+
+```powershell
+pip list
+```
+
+## 4: Implementar el backend de Flask (archivos clave):
+
+> [!IMPORTANT]
+> init__ ,  models route y app
+
+## 5: Configurar las variables de entorno
+Crear un archivo .env:
