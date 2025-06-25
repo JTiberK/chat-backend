@@ -1,5 +1,5 @@
-Paso 1: Configurar el backend de Flask
-Crear un nuevo directorio para el proyecto Python
+# Configurar el backend de Flask
+## 1. Crear un nuevo directorio para el proyecto Python
 
 ```bash
 mkdir gemini-chat-backend
@@ -35,3 +35,36 @@ Si tienes problemas para ejecutar el script debido a restricciones de ejecución
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 Esto permitirá ejecutar scripts firmados localmente.
+
+## 2. Instalar los paquetes requeridos
+
+```powershell
+pip install flask flask-cors flask-jwt-extended python-dotenv google-generativeai sqlalchemy
+```
+## 2. Crear la estructura de la aplicación Flask
+
+```plaintext
+gemini-chat-backend/
+├── app/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── utils.py
+│   └── config.py
+├── .env
+├── requirements.txt
+└── run.py
+```
+
+## 3. Paso 1: Crear el archivo requirements.txt
+
+```diff
+
+diff | En el directorio gemini-chat-backend, cree un archivo llamado `requirements.txt`.
+diff | Agregue las siguientes líneas al archivo ´requirements.txt´ para especificar los paquetes necesarios:
+diff | 
+
+```
+
+
+
