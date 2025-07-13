@@ -1,1 +1,1 @@
-# gemini-chat-backend
+# chat-backend
